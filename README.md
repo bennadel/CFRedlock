@@ -1,5 +1,5 @@
 
-# CFRedlock - A ColdFusion Implementation Of [Redlock][redlock], The Distributed Locking Algorithm
+# CFRedlock For ColdFusion
 
 by [Ben Nadel][bennadel] (on [Google+][googleplus])
 
