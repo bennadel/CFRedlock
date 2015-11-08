@@ -88,7 +88,7 @@ component
 		);
 
 		return( 
-			new lib.Redlock().createJedisClient(
+			new lib.CFRedlock().createJedisClient(
 				[ jedisPool ],
 				retryDelayInMilliseconds,
 				maxRetryCount

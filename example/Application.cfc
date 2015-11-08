@@ -45,18 +45,18 @@ component
 		// --
 		// NOTE: While the Redlock algorithm is designed to use multiple servers for
 		// fail-over, it works just fine with a single server as well.
-		application.locking = new lib.Redlock().createJedisClient( [ jedisPool ] )
+		application.locking = new lib.CFRedlock().createJedisClient( [ jedisPool ] )
 			.setPrefix( "locking:" )
 		;
 
 		// Create an isolated, single ColdFusion instance using the distributed locking interface.
-		// application.locking = new lib.Redlock().createIsolatedClient()
+		// application.locking = new lib.CFRedlock().createIsolatedClient()
 		// 	.setPrefix( "locking:" )
 		// ;
 
 		// Create a mock distributed locking service using the given hard-coded get and 
 		// delete response values. This is only valuable for testing.
-		// application.locking = new lib.Redlock().createTestClient(
+		// application.locking = new lib.CFRedlock().createTestClient(
 		// 	[
 		// 		[ false, true ],
 		// 		[ true, true ],

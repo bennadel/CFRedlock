@@ -17,7 +17,7 @@ component
 
 			}
 
-			var passClient = new lib.Redlock().createTestClient( serverConfigurations );
+			var passClient = new lib.CFRedlock().createTestClient( serverConfigurations );
 				
 			var myLock = passClient.getLock( "my-lock", 1000 );
 
@@ -39,7 +39,7 @@ component
 
 			}
 
-			var passClient = new lib.Redlock().createTestClient( serverConfigurations, 50 );
+			var passClient = new lib.CFRedlock().createTestClient( serverConfigurations, 50 );
 				
 			try {
 
@@ -58,7 +58,7 @@ component
 
 
 		// Test that a majority of GOOD servers work.
-		var passClient = new lib.Redlock().createTestClient( 
+		var passClient = new lib.CFRedlock().createTestClient( 
 			[
 				[ true, true ], // Good.
 				[ false, true ],
@@ -74,7 +74,7 @@ component
 
 
 		// Test that a majority of BAD servers fail.
-		var passClient = new lib.Redlock().createTestClient( 
+		var passClient = new lib.CFRedlock().createTestClient( 
 			[
 				[ false, true ],
 				[ true, true ], // Good.
@@ -105,7 +105,7 @@ component
 		// To test race conditions, we are going to create an isolated ColdFusion client.
 		// --
 		// CAUTION: Have to store in Variables scope to make available in threads.
-		variables.cfClient = new lib.Redlock().createIsolatedClient();
+		variables.cfClient = new lib.CFRedlock().createIsolatedClient();
 
 		var lockName = "race-condition-test";
 		var threadNames = [ "cf-racerA", "cf-racerB", "cf-racerC", "cf-racerD" ];
@@ -182,7 +182,7 @@ component
 	public void function test_that_get_release_lifecycle_works() {
 
 		// CAUTION: Have to store in Variables scope to make available in threads.
-		variables.cfClient = new lib.Redlock().createIsolatedClient( 50 );
+		variables.cfClient = new lib.CFRedlock().createIsolatedClient( 50 );
 
 		var lockName = "lifecycle-test";
 
@@ -216,7 +216,7 @@ component
 
 	public void function test_that_detach_key_will_expire() {
 
-		var cfClient = new lib.Redlock().createIsolatedClient( 50 );
+		var cfClient = new lib.CFRedlock().createIsolatedClient( 50 );
 
 		var myLock = cfClient.getLock( "detached-key-test", 1000 );
 

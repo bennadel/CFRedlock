@@ -40,20 +40,20 @@ var locking = new lib.client.DistributedLockClient(
 
 ```cfc
 // Create a Jedis-powered client - requires an array of JedisPool instances.
-var locking = new lib.Redlock().createJedisClient( 
+var locking = new lib.CFRedlock().createJedisClient( 
 	jedisPools,
 	retryDelayInMilliseconds,
 	maxRetryCount
 );
 
 // Create an ISOLATED ColdFusion client (uses CFLock internally).
-var locking = new lib.Redlock().createIsolatedClient( 
+var locking = new lib.CFRedlock().createIsolatedClient( 
 	retryDelayInMilliseconds,
 	maxRetryCount
 );
 
 // Create a test client with static GET / DELETE behavior.
-var locking = new lib.Redlock().createTestClient(
+var locking = new lib.CFRedlock().createTestClient(
 	[
 		[ true, true ],
 		[ false, false ],
