@@ -23,7 +23,7 @@ For CFRedlock, the Redis client is powered by Jedis and depends on the Jedis JAR
 (and its dependency on the Apache commons Pool2 library). However, you can write your
 own KeyServer implementation that uses any driver that you want.
 
-h2. Creating The Distributed Locking Client
+## Creating The Distributed Locking Client
 
 To start using CFRedlock, you need to create the distributed locking client. You can 
 instantiated the DistributedLockClient.cfc yourself:
@@ -64,7 +64,7 @@ var locking = new lib.Redlock().createTestClient(
 );
 ```
 
-h3. Why An Isolated ColdFusion Instance?
+### Why An Isolated ColdFusion Instance?
 
 It may seem odd to provide an isolated, single-ColdFusion instance version of Redlock.
 However, this can help with migrations. Let's say that you want to start implementing
@@ -74,7 +74,7 @@ the ground-work for the distributed locking workflow. Then, when you have a set 
 servers ready to rock, switching from the Isolated version to the fully distributed, 
 Redis-powered version should be a drop-in replacement.
 
-h2. The Distributed Locking Workflow
+## The Distributed Locking Workflow
 
 Using a service is a little bit more involved than using the native ColdFusion CFLock 
 tag. But, not by all that much. More than anything, you just have to be careful to always
