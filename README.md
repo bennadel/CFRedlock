@@ -110,7 +110,7 @@ like an easy mental model.
 If you don't want to manage the acquisition and the subsequent release of the lock, you
 can use a closure as your lock body. The distributed lock client has two methods that 
 support closure-based execution: one that will throw lock errors and one that will 
-swallow lock errors (meant to mimic throwOnError=false).
+swallow lock errors (meant to mimic throwOnTimeout=false).
 
 ```cfc
 // Will THROW an error if lock is not acquired.
