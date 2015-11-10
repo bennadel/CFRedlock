@@ -1,6 +1,6 @@
 <cfscript>
 
-	// Create a lock that will automatically expire in 60-seconds.
+	// Create a lock that will automatically expire in 20-seconds.
 	// --
 	// NOTE: The expiration date is required and is there to ensure that a lock
 	// won't remain in-place indefinitely if the client code forgets to close it

@@ -36,6 +36,76 @@ component
 
 
 	/**
+	* I attempt to acquire a distributed lock with the given name. If the lock can be 
+	* obtained, the closure is run. If the lock cannot be acquired, an error is thrown.
+	* 
+	* The result of the closure execution is returned.
+	* 
+	* @name I am the name of the lock.
+	* @ttlInMilliseconds I am the time-to-live of the lock, after which it will auto-expire.
+	* @operator I am the closure that executes the lock body.
+	* @output false
+	*/
+	public any function executeLock(
+		required string name,
+		required numeric ttlInMilliseconds,
+		required function opereator
+		) {
+
+		try {
+
+			var acquiredLock = getLock( name, ttlInMilliseconds );
+
+			return( opereator() );
+
+		} finally {
+
+			if ( structKeyExists( local, "acquiredLock" ) ) {
+
+				acquiredLock.releaseLock();
+
+			}
+
+		}
+
+	}
+
+
+	/**
+	* I attempt to acquire a distributed lock with the given name. If the lock can be 
+	* obtained, the closure is run. If the lock cannot be acquired, the closure is 
+	* skipped and no error is thrown. 
+	* 
+	* The result of the closure execution is returned; however, if the lock could not
+	* be acquired, the result will be null.
+	* 
+	* @name I am the name of the lock.
+	* @ttlInMilliseconds I am the time-to-live of the lock, after which it will auto-expire.
+	* @operator I am the closure that executes the lock body.
+	* @output false
+	*/
+	public any function executeLockOrSkip(
+		required string name,
+		required numeric ttlInMilliseconds,
+		required function opereator
+		) {
+
+		try {
+
+			return( executeLock( name, ttlInMilliseconds, opereator ) );
+
+		// We only want to catch and swallow lock-failure errors. All other error types
+		// should bubble-up to the calling context where the code can deal with them.
+		} catch ( CFRedlock.LockFailure error ) {
+
+			// Swallow the error, nothing to return.
+
+		}
+
+	}
+
+
+	/**
 	* I attempt to acquire a distributed lock with the given name. If the lock cannot
 	* be acquired, an error is thrown.
 	* 

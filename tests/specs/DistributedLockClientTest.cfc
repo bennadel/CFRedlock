@@ -245,4 +245,99 @@ component
 
 	}
 
+
+	public void function test_that_execute_lock_lifecycle_works() {
+
+		// CAUTION: Have to store in Variables scope to make available in threads.
+		variables.cfClient = new lib.CFRedlock().createIsolatedClient( 50 );
+
+		var lockName = "lifecycle-test";
+
+		for ( var i = 0 ; i < 10 ; i++ ) {
+
+			cfClient.executeLock(
+				lockName,
+				( 10 * 1000 ),
+				function() {
+
+					thread
+						name = "closure-workflow-racer#i#"
+						lockName = lockName
+						{
+
+						// Expecting this one to fail since we are currently inside another lock.
+						var innerLock = cfClient.getLock( lockName, 10 );
+
+					}
+
+					thread action = "join";
+
+					assert( cfthread[ "closure-workflow-racer#i#" ].error.message == "The distributed lock could not be obtained." );
+
+
+				}
+			);
+
+		}
+
+		// Clean up test.
+		structDelete( variables, "cfClient" );
+
+	}
+
+
+	public void function test_that_execute_lock_or_skip_lifecycle_works() {
+
+		var cfClient = new lib.CFRedlock().createIsolatedClient( 50 );
+
+		var lockName = "lifecycle-test";
+
+		for ( var i = 0 ; i < 10 ; i++ ) {
+
+			cfClient.executeLock(
+				lockName,
+				( 10 * 1000 ),
+				function() {
+
+					cfClient.executeLockOrSkip( lockName, 10, function(){} );
+
+				}
+			);
+
+		}
+
+	}
+
+
+	public void function test_that_skip_doesn_swallow_valid_errors() {
+
+		var cfClient = new lib.CFRedlock().createIsolatedClient( 50 );
+
+		try {
+
+			cfClient.executeLockOrSkip(
+				"error-test",
+				( 10 * 1000 ),
+				function() {
+
+					var x = UNDEFINED_VALUE;
+
+				}
+			);
+
+			// We are expecting the above to throw an error.
+			assert( false );
+
+		} catch ( "CFRedlock.LockFailure" error ) {
+
+			assert( false );
+
+		} catch ( any error ) {
+
+			assert( true );
+
+		}
+
+	}
+
 }

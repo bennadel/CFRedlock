@@ -105,8 +105,41 @@ like an easy mental model.
 
 **CAUTION**: If the lock cannot be obtained, an error will be thrown.
 
-If you wanted to abstract some of this workflow, you could probably write a ColdFusion
-custom tag and then [use it in your CFScript / CFComponent context in ColdFusion 11](http://www.bennadel.com/blog/2587-robust-cfscript-suport-for-tags-in-coldfusion-11-beta.htm).
+## Encapsulating Lock Management
+
+If you don't want to manage the acquisition and the subsequent release of the lock, you
+can use a closure as your lock body. The distributed lock client has two methods that 
+support closure-based execution: one that will throw lock errors and one that will 
+swallow lock errors (meant to mimic throwOnError=false).
+
+```cfc
+// Will THROW an error if lock is not acquired.
+var result = lockingClient.executeLock(
+	"my-lock-name",
+	expirationInMilliseconds,
+	function() {
+
+		// ... some synchronized code.
+
+	}
+);
+
+// Will NOT THROW an error if lock is not acquired.
+// --
+// CAUTION: This only swallows lock errors. All other errors will bubble up.
+var result = lockingClient.executeLockOrSkip(
+	"my-lock-name",
+	expirationInMilliseconds,
+	function() {
+
+		// ... some synchronized code.
+
+	}
+);
+```
+
+Now, you don't have to manage the lock yourself. You just provide a closure to execute
+when the lock is obtained. The client will manage the lock for you.
 
 
 [bennadel]: http://www.bennadel.com
